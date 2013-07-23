@@ -24,6 +24,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <hwloc.h>
 #include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -37,7 +39,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 static hwloc_topology_t topo;
 
-static void print_cpu_bind(FILE* f, int rank, int threadid)
+static void print_cpu_bind(FILE* f, char* name, int rank, int threadid)
 {
 	char* s;
 	hwloc_bitmap_t cpuset = hwloc_bitmap_alloc();
@@ -46,22 +48,28 @@ static void print_cpu_bind(FILE* f, int rank, int threadid)
 	hwloc_get_cpubind(topo, cpuset, HWLOC_CPUBIND_THREAD);
 	hwloc_bitmap_list_asprintf(&s, cpuset);
 	hwloc_bitmap_free(cpuset);
-	fprintf(f, "MPI rank %d thread %d running on %s\n", rank, threadid, 
-		s);
+	fprintf(f, "On host %s, MPI rank %d thread %d bound to PU(s) %s\n", 
+		name, rank, threadid, s);
 	free(s);
 }
 
 int main(int argc, char **argv)
 {
 	int rank = 0;
-	hwloc_topology_init(&topo);
-	hwloc_topology_load(topo);
+	char name[HOST_NAME_MAX];
 
 #ifdef MPI
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 #endif
 
+	hwloc_topology_init(&topo);
+	hwloc_topology_load(topo);
+
+	if (gethostname(name, HOST_NAME_MAX)) {
+		perror("gethostname failed");
+		abort();
+	}
 
 	#pragma omp parallel
 	{
@@ -70,7 +78,7 @@ int main(int argc, char **argv)
 #else
 		int threadid = 0;
 #endif
-		print_cpu_bind(stdout, rank, threadid);
+		print_cpu_bind(stdout, name, rank, threadid);
 	}
 
 #ifdef MPI
