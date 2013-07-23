@@ -44,7 +44,7 @@ static void print_cpu_bind(FILE* f, int rank, int threadid)
 
 	/* get the current thread CPU location */
 	hwloc_get_cpubind(topo, cpuset, HWLOC_CPUBIND_THREAD);
-	hwloc_bitmap_asprintf(&s, cpuset);
+	hwloc_bitmap_list_asprintf(&s, cpuset);
 	hwloc_bitmap_free(cpuset);
 	fprintf(f, "MPI rank %d thread %d running on %s\n", rank, threadid, 
 		s);
