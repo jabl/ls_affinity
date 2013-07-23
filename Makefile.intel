@@ -1,0 +1,5 @@
+CC := icc
+OPENMP_FLAG := -openmp
+MPICC := mpicc
+
+include rules.mk
