@@ -18,8 +18,11 @@ support. To build the program using the provided makefile, GNU make is
 Building
 --------
 
-The out-of-the-box makefile assumes GCC. If you use another compiler
-such as ICC, just edit the first few lines of the Makefile.
+The out-of-the-box makefile assumes GCC. If you use the Intel
+compiler, use the Makefile.intel makefile, that is, run "make -f
+Makefile.intel". If you use another compiler, you can make a copy of
+the main makefile with a suitable suffic such as "Makefile.foo", and
+edit it appropriately.
 
 
 Running
@@ -36,8 +39,8 @@ for the Intel compiler use KMP_AFFINITY.
 
 ### Example
 
-Running 2 MPI processes with 4 threads per rank, by default with
-OpenMPI 1.4 one gets e.g.
+Running 2 MPI processes with 4 threads per rank on a computer with 8
+hardware threads, by default with OpenMPI 1.4 one gets e.g.
 
 	$ OMP_NUM_THREADS=4 mpirun -n 2 ./mpi_ls_affinity_mpi_openmp 
 	MPI rank 0 thread 0 running on 0x000000ff
