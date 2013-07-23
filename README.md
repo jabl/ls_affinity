@@ -43,24 +43,29 @@ Running 2 MPI processes with 4 threads per rank on a computer with 8
 hardware threads, by default with OpenMPI 1.4 one gets e.g.
 
 	$ OMP_NUM_THREADS=4 mpirun -n 2 ./mpi_ls_affinity_mpi_openmp 
-	MPI rank 1 thread 0 running on 0-7
-	MPI rank 0 thread 0 running on 0-7
-	MPI rank 1 thread 1 running on 0-7
-	MPI rank 1 thread 3 running on 0-7
-	MPI rank 1 thread 2 running on 0-7
-	MPI rank 0 thread 1 running on 0-7
-	MPI rank 0 thread 3 running on 0-7
-	MPI rank 0 thread 2 running on 0-7
+	On host XXX, MPI rank 1 thread 0 bound to PU(s) 0-7
+	On host XXX, MPI rank 0 thread 0 bound to PU(s) 0-7
+	On host XXX, MPI rank 1 thread 1 bound to PU(s) 0-7
+	On host XXX, MPI rank 1 thread 3 bound to PU(s) 0-7
+	On host XXX, MPI rank 1 thread 2 bound to PU(s) 0-7
+	On host XXX, MPI rank 0 thread 1 bound to PU(s) 0-7
+	On host XXX, MPI rank 0 thread 3 bound to PU(s) 0-7
+	On host XXX, MPI rank 0 thread 2 bound to PU(s) 0-7
 
 By setting the affinity for both OpenMP and OpenMPI one gets
 
 	$ GOMP_CPU_AFFINITY=0-7 OMP_NUM_THREADS=4 mpirun -n 2 -bind-to-core -cpus-per-proc 4 ./mpi_ls_affinity_mpi_openmp 
-	MPI rank 0 thread 0 running on 0
-	MPI rank 1 thread 0 running on 4
-	MPI rank 0 thread 1 running on 1
-	MPI rank 1 thread 1 running on 5
-	MPI rank 1 thread 2 running on 6
-	MPI rank 1 thread 3 running on 7
-	MPI rank 0 thread 2 running on 2
-	MPI rank 0 thread 3 running on 3
+	On host XXX, MPI rank 0 thread 0 bound to PU(s) 0
+	On host XXX, MPI rank 1 thread 0 bound to PU(s) 4
+	On host XXX, MPI rank 0 thread 1 bound to PU(s) 1
+	On host XXX, MPI rank 1 thread 1 bound to PU(s) 5
+	On host XXX, MPI rank 1 thread 2 bound to PU(s) 6
+	On host XXX, MPI rank 1 thread 3 bound to PU(s) 7
+	On host XXX, MPI rank 0 thread 2 bound to PU(s) 2
+	On host XXX, MPI rank 0 thread 3 bound to PU(s) 3
 
+In the program output, "PU(s)" means "processing unit", per the hwloc
+terminology: "The smallest processing element that can be represented
+by a hwloc object. It may be a single-core processor, a core of a
+multicore processor, or a single thread in a SMT processor. hwloc's PU
+acronym stands for Processing Unit. "
