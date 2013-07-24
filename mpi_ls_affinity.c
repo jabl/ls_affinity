@@ -59,8 +59,14 @@ int main(int argc, char **argv)
 	char name[HOST_NAME_MAX];
 
 #ifdef MPI
-	MPI_Init(&argc, &argv);
+	int provided;
+	MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &provided);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+#ifdef _OPENMP
+	if (provided == MPI_THREAD_SINGLE && rank == 0)
+		fprintf(stderr, "WARNING: Only MPI_THREAD_SINGLE available,"
+			" continuing anyway.\n");
+#endif
 #endif
 
 	hwloc_topology_init(&topo);
