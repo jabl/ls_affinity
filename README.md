@@ -1,9 +1,11 @@
-mpi_ls_affinity
-===============
+ls_affinity
+===========
 
-Check CPU affinity for each MPI rank. This program is mainly meant as
-a debugging aid for understanding the interaction between MPI runtimes
-and workload managers.
+List CPU affinity.  The program supports 4 different modes of
+operation; serial, multithreaded (using OpenMP), MPI, and hybrid
+OpenMP/MPI.  This program is mainly meant as a debugging aid for
+understanding the interaction between MPI runtimes and workload
+managers.
 
 Prerequisites
 -------------
@@ -42,7 +44,7 @@ for the Intel compiler use KMP_AFFINITY.
 Running 2 MPI processes with 4 threads per rank on a computer with 8
 hardware threads, by default with OpenMPI 1.4 one gets e.g.
 
-	$ OMP_NUM_THREADS=4 mpirun -n 2 ./mpi_ls_affinity_mpi_openmp 
+	$ OMP_NUM_THREADS=4 mpirun -n 2 ./ls_affinity_mpi_openmp 
 	On host XXX, MPI rank 1 thread 0 bound to PU(s) 0-7
 	On host XXX, MPI rank 0 thread 0 bound to PU(s) 0-7
 	On host XXX, MPI rank 1 thread 1 bound to PU(s) 0-7
@@ -54,7 +56,7 @@ hardware threads, by default with OpenMPI 1.4 one gets e.g.
 
 By setting the affinity for both OpenMP and OpenMPI one gets
 
-	$ GOMP_CPU_AFFINITY=0-7 OMP_NUM_THREADS=4 mpirun -n 2 -bind-to-core -cpus-per-proc 4 ./mpi_ls_affinity_mpi_openmp 
+	$ GOMP_CPU_AFFINITY=0-7 OMP_NUM_THREADS=4 mpirun -n 2 -bind-to-core -cpus-per-proc 4 ./ls_affinity_mpi_openmp 
 	On host XXX, MPI rank 0 thread 0 bound to PU(s) 0
 	On host XXX, MPI rank 1 thread 0 bound to PU(s) 4
 	On host XXX, MPI rank 0 thread 1 bound to PU(s) 1
